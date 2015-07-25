@@ -12,6 +12,9 @@ router.get('/author', function (req, res) {
     res.render('author', {title: 'Autores',autor: 'Homero Simpson',video: "https://www.youtube.com/embed/eW9gt6g8ZAU"});
 });
 
+// Autoload de comandos con quizId
+router.param('quizId', quizController.load);  // autoload :quizId
+
 router.get('/quizes', quizController.index);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
