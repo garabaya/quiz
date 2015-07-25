@@ -22,7 +22,13 @@ exports.load = function (req, res, next, quizId) {
 // GET quizes/index
 
 exports.index = function (req, res) {
-    models.Quiz.findAll().then(function (quizes) {
+    var options = {};
+    options.order = [['pregunta', 'ASC']];
+    if(req.query.search){
+        var busqueda='%'+req.query.search.replace(' ','%')+'%';
+        options.where = {pregunta : {like : busqueda}};
+    }
+    models.Quiz.findAll(options).then(function (quizes) {
         res.render('quizes/index', {quizes: quizes});
     }).catch(function (error) {
         next(error);
