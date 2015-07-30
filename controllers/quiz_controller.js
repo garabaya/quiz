@@ -24,9 +24,9 @@ exports.load = function (req, res, next, quizId) {
 exports.index = function (req, res) {
     var options = {};
     options.order = [['pregunta', 'ASC']];
-    if(req.query.search){
-        var busqueda='%'+req.query.search.replace(' ','%')+'%';
-        options.where = {pregunta : {like : busqueda}};
+    if (req.query.search) {
+        var busqueda = '%' + req.query.search.replace(' ', '%') + '%';
+        options.where = {pregunta: {like: busqueda}};
     }
     models.Quiz.findAll(options).then(function (quizes) {
         res.render('quizes/index', {quizes: quizes});
@@ -50,3 +50,21 @@ exports.answer = function (req, res) {
     }
     res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 };
+
+// GET quizes/new
+
+exports.new = function (req, res) {
+    var quiz = models.Quiz.build({pregunta: 'Pregunta', respuesta: 'Respuesta'});//Crear el objeto quiz
+    res.render('quizes/new', {quiz: quiz});
+}
+
+// POST quizes/create
+
+exports.create = function (req, res) {
+    var quiz = models.Quiz.build(req.body.quiz); //creamos el objeto Quiz con el objeto quiz recibido en el body del request
+
+    //guardamos el objeto en la BD
+    quiz.save({fields: ["pregunta", "respuesta"]}).then(function () {
+        res.redirect('/quizes');
+    });
+}
