@@ -5,11 +5,11 @@ var quizController = require('../controllers/quiz_controller');
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', {title: 'Quiz'});
+    res.render('index', {title: 'Quiz',errors:[]});
 });
 /* GET author page. */
 router.get('/author', function (req, res) {
-    res.render('author', {title: 'Autores',autor: 'Homero Simpson',video: "https://www.youtube.com/embed/eW9gt6g8ZAU"});
+    res.render('author', {title: 'Autores',autor: 'Homero Simpson',video: "https://www.youtube.com/embed/eW9gt6g8ZAU",errors:[]});
 });
 
 // Autoload de comandos con quizId
