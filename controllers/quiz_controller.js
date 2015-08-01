@@ -29,7 +29,7 @@ exports.index = function (req, res) {
         options.where = {pregunta: {like: busqueda}};
     }
     models.Quiz.findAll(options).then(function (quizes) {
-        res.render('quizes/index', {quizes: quizes,errors: []});
+        res.render('quizes/index', {quizes: quizes, errors: []});
     }).catch(function (error) {
         next(error);
     });
@@ -38,7 +38,7 @@ exports.index = function (req, res) {
 // GET quizes/show
 
 exports.show = function (req, res) {
-    res.render('quizes/show', {quiz: req.quiz,errors:[]});
+    res.render('quizes/show', {quiz: req.quiz, errors: []});
 };
 
 // GET quizes/answer
@@ -48,14 +48,14 @@ exports.answer = function (req, res) {
     if (req.query.respuesta === req.quiz.respuesta) {
         resultado = 'Correcto';
     }
-    res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado,errors:[]});
+    res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
 // GET quizes/new
 
 exports.new = function (req, res) {
     var quiz = models.Quiz.build({pregunta: 'Pregunta', respuesta: 'Respuesta'});//Crear el objeto quiz
-    res.render('quizes/new', {quiz: quiz,errors:[]});
+    res.render('quizes/new', {quiz: quiz, errors: []});
 }
 
 // POST quizes/create
@@ -64,10 +64,10 @@ exports.create = function (req, res) {
     var quiz = models.Quiz.build(req.body.quiz); //creamos el objeto Quiz con el objeto quiz recibido en el body del request
 
     //guardamos el objeto en la BD
-    quiz.validate().then(function(err){
-        if(err){
-            res.render('quizes/new', {quiz:quiz,errors:err.errors});
-        }else{
+    quiz.validate().then(function (err) {
+        if (err) {
+            res.render('quizes/new', {quiz: quiz, errors: err.errors});
+        } else {
             quiz.save({fields: ["pregunta", "respuesta"]}).then(function () {
                 res.redirect('/quizes');
             });
@@ -78,23 +78,23 @@ exports.create = function (req, res) {
 
 // GET quizes/edit
 
-exports.edit = function(req,res) {
+exports.edit = function (req, res) {
     var quiz = req.quiz;//Autoload de quiz
 
-    res.render('quizes/edit', {quiz:quiz,errors:[]});
+    res.render('quizes/edit', {quiz: quiz, errors: []});
 }
 
-// POST quizes/create
+// PUT quizes/id
 
 exports.update = function (req, res) {
     req.quiz.pregunta = req.body.quiz.pregunta;
     req.quiz.respuesta = req.body.quiz.respuesta;
 
     //guardamos el objeto en la BD
-    req.quiz.validate().then(function(err){
-        if(err){
-            res.render('quizes/edit', {quiz:req.quiz,errors:err.errors});
-        }else{
+    req.quiz.validate().then(function (err) {
+        if (err) {
+            res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+        } else {
             req.quiz.save({fields: ["pregunta", "respuesta"]}).then(function () {
                 res.redirect('/quizes');
             });
@@ -102,3 +102,13 @@ exports.update = function (req, res) {
     })
 
 }
+
+// DELETE quizes/id
+
+exports.destroy = function (req, res) {
+    req.quiz.destroy().then(function () {
+        res.redirect('/quizes');
+    }).catch(function (error) {
+        next(error)
+    });
+};
