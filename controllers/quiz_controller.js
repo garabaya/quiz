@@ -6,7 +6,10 @@ var models = require('../models/models.js');
 
 // Autoload :id
 exports.load = function (req, res, next, quizId) {
-    models.Quiz.find(quizId).then(function (quiz) {
+    models.Quiz.find({
+        where: {id: Number(quizId)},
+        include: [{model: models.Comment}]
+    }).then(function (quiz) {
             if (quiz) {
                 req.quiz = quiz;
                 next();
@@ -56,7 +59,7 @@ exports.answer = function (req, res) {
 exports.new = function (req, res) {
     var quiz = models.Quiz.build({pregunta: 'Pregunta', respuesta: 'Respuesta'});//Crear el objeto quiz
     res.render('quizes/new', {quiz: quiz, errors: []});
-}
+};
 
 // POST quizes/create
 
@@ -74,7 +77,7 @@ exports.create = function (req, res) {
         }
     })
 
-}
+};
 
 // GET quizes/edit
 
@@ -82,7 +85,7 @@ exports.edit = function (req, res) {
     var quiz = req.quiz;//Autoload de quiz
 
     res.render('quizes/edit', {quiz: quiz, errors: []});
-}
+};
 
 // PUT quizes/id
 
@@ -102,7 +105,7 @@ exports.update = function (req, res) {
         }
     })
 
-}
+};
 
 // DELETE quizes/id
 
