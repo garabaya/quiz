@@ -43,7 +43,24 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.use(function(req,res,next){
+    var sess = req.session;
+    sess.ultimo = (sess.ultimo || Date.now());
+    if (req.session.user && (((Date.now()-sess.ultimo)/60000)>=2)){
+        delete req.session.user;
+        //req.session.destroy();
+        req.session.errors = [{"message": '¡Eres un tardón!'}];
+        res.redirect("/login");
+    }else{
+        sess.ultimo=Date.now();
+        next();
+    }
+
+});
+
 app.use('/', routes);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
